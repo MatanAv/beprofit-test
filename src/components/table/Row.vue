@@ -1,21 +1,3 @@
-<template>
-  <thead v-if="type === 'header'">
-    <tr>
-      <th v-for="column in columns">{{ column }}</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody v-else>
-    <tr>
-      <td v-for="column in columns">{{ row[column] }}</td>
-      <td>
-        <button @click="edit">Edit</button>
-        <button @click="delete">Delete</button>
-      </td>
-    </tr>
-  </tbody>
-</template>
-
 <script>
 export default {
   name: 'Row',
@@ -43,3 +25,23 @@ export default {
   }
 };
 </script>
+
+<template>
+  <thead v-if="type === 'header'">
+    <tr>
+      <th v-for="column in columns">{{ column }}</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody v-else>
+    <tr>
+      <td v-for="column in columns">{{ row[column] }}</td>
+      <td>
+        <button @click="edit">Edit</button>
+        <button @click="delete">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</template>
+
+<style scoped></style>

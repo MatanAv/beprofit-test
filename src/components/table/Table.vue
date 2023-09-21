@@ -1,38 +1,3 @@
-<template>
-  <div class="table">
-    <Search :searchTerm="searchTerm" @search="search" />
-    <table>
-      <Row :row="headerRow" :columns="headerRow.columns" type="header" />
-      <Row v-for="row in bodyRows" :row="row" :columns="row.columns" type="body" />
-    </table>
-    <button @click="addRow(row)">Add Row</button>
-    <Pagination :currentPage="currentPage" :totalPages="totalPages" @previousPage="previousPage" @nextPage="nextPage" />
-  </div>
-</template>
-
-<!-- <template>
-  <div class="table">
-    <Search :searchTerm="searchTerm" @search="search" />
-    <table>
-      <thead>
-        <tr>
-          <th v-for="column in columns" @click="sort(column)">{{ column }}</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="row in sortedRows">
-          <td v-for="column in columns">{{ row[column] }}</td>
-          <td>
-            <button @click="editRow(row)">Edit</button>
-            <button @click="deleteRow(row)">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</template> -->
-
 <script>
 import Search from './Search.vue';
 import Row from './Row.vue';
@@ -40,11 +5,13 @@ import Pagination from './Pagination.vue';
 
 export default {
   name: 'Table',
+  data: function () {
+    return {
+      searchTerm: '',
+      currentPage: 0
+    };
+  },
   props: {
-    columns: {
-      type: Array,
-      required: true
-    },
     headerRow: {
       type: Object,
       required: true
@@ -53,23 +20,36 @@ export default {
       type: Array,
       required: true
     },
-    searchTerm: {
-      type: String,
-      required: true
+    isSearchable: {
+      type: Boolean,
+      default: true,
+      required: false
     },
-    currentPage: {
-      type: Number,
-      required: true
+    isSortable: {
+      type: Boolean,
+      default: true,
+      required: false
     },
-    totalPages: {
-      type: Number,
-      required: true
+    isEditable: {
+      type: Boolean,
+      default: true,
+      required: false
+    },
+    isDeletable: {
+      type: Boolean,
+      default: true,
+      required: false
+    },
+    isAddable: {
+      type: Boolean,
+      default: true,
+      required: false
     }
   },
-  components: {
-    Search,
-    Row,
-    Pagination
+  computed: {
+    totalPages() {
+      return Math.ceil(this.bodyRows.length / 10);
+    }
   },
   methods: {
     search: function (searchTerm) {
@@ -102,76 +82,24 @@ export default {
       });
     }
   },
-  data: function () {
-    return {
-      searchTerm: ''
-    };
-  },
-  computed: {
-    filteredRows: function () {
-      return this.rows.filter((row) => {
-        return Object.values(row).some((value) => {
-          return String(value).toLowerCase().includes(this.searchTerm.toLowerCase());
-        });
-      });
-    },
-    sortedRows: function () {
-      return this.filteredRows.sort((a, b) => {
-        if (a[this.sortColumn] < b[this.sortColumn]) {
-          return -1;
-        }
-        if (a[this.sortColumn] > b[this.sortColumn]) {
-          return 1;
-        }
-        return 0;
-      });
-    },
-    sortColumn: function () {
-      return this.columns.find((column) => {
-        return column === this.sortBy;
-      });
-    },
-    addRow: function () {
-      return this.rows.push((row) => {
-        return row;
-      });
-    },
-    editRow: function () {
-      return this.rows.splice((row) => {
-        return row;
-      });
-    },
-    deleteRow: function () {
-      return this.rows.splice((row) => {
-        return row;
-      });
-    }
-  },
-  watch: {
-    searchTerm: function () {
-      this.$emit('search', this.searchTerm);
-    },
-    rows: function () {
-      this.$emit('rows', this.rows);
-    },
-    columns: function () {
-      this.$emit('columns', this.columns);
-    }
-  },
-  mounted: function () {
-    this.$emit('search', this.searchTerm);
-
-    // this.$emit('rows', this.rows);
-
-    // this.$emit('columns', this.columns);
-  },
-  updated: function () {
-    this.$emit('search', this.searchTerm);
-  },
-  created: function () {
-    this.$emit('search', this.searchTerm);
+  components: {
+    Search,
+    Row,
+    Pagination
   }
 };
 </script>
+
+<template>
+  <div class="table">
+    <Search :searchTerm="searchTerm" @search="search" />
+    <table>
+      <Row :row="headerRow" :columns="headerRow.columns" type="header" />
+      <Row v-for="row in bodyRows" :row="row" :columns="row.columns" type="body" />
+    </table>
+    <button @click="addRow(row)">Add Row</button>
+    <Pagination :currentPage="currentPage" :totalPages="totalPages" @previousPage="previousPage" @nextPage="nextPage" />
+  </div>
+</template>
 
 <style scoped></style>

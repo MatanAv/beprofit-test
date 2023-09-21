@@ -1,9 +1,3 @@
-<template>
-  <div class="search">
-    <input type="text" v-model="searchTerm" />
-  </div>
-</template>
-
 <script>
 export default {
   name: 'Search',
@@ -51,3 +45,15 @@ export default {
   // }
 };
 </script>
+
+<template>
+  <div class="search">
+    <input type="text" v-model="searchTerm" />
+  </div>
+</template>
+
+<style scoped>
+.search {
+  margin-bottom: 1rem;
+}
+</style>
