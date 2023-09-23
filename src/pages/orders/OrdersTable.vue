@@ -1,44 +1,52 @@
+<template>
+  <CustomizedTable id="orders-table" v-if="orders" :headers="headers" :items="orders" />
+</template>
+
 <script>
-import axios from 'axios';
-import Table from '@/components/table/Table.vue';
+import CustomizedTable from '@/components/table/CustomizedTable.vue';
 import { getAllOrders } from '@/services/api/orders.js';
+import { ordersTableHeader, lineItemsTableHeader, transactionInfo } from '@/constants/tables/orders.js';
 
 export default {
   name: 'OrdersTable',
-  components: {
-    Table
-  },
   data: function () {
     return {
-      header: {},
-      rows: []
+      orders: null,
+      itemsPerPage: 10,
+      error: null
     };
   },
-  methods: {
-    buildHeader(data) {
-      const header = {};
-
-      for (const key in data) {
-        header[key] = key;
-      }
-
-      return header;
+  computed: {
+    headers() {
+      return ordersTableHeader;
+    }
+    // lineItemsTableHeader() {
+    //   return lineItemsTableHeader;
+    // },
+    // transactionInfo() {
+    //   return transactionInfo;
+    // }
+  },
+  async created() {
+    try {
+      this.orders = await getAllOrders();
+    } catch (error) {
+      console.error(error);
+      this.error = error;
+      // redirect to error page or show error message
     }
   },
-  // create async created hook
-  async created() {
-    const orders = await getAllOrders();
-
-    this.header = buildHeader(orders.header);
-    this.rows = orders.body;
+  components: {
+    CustomizedTable
   }
 };
 </script>
 
-<template>
-  <div class="orders-table">
-    <Table :headerRow="ordersList.header" :bodyRows="ordersList.body" />
-  </div>
-</template>
-
-<style scoped></style>
+<style scoped>
+#orders-table {
+  width: 90%;
+  margin: 0 auto;
+  padding: 20px;
+  /* border-radius: 5px; */
+}
+</style>

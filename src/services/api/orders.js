@@ -5,11 +5,11 @@ import orders from '@/assets/data/orders.json';
 const { InternalServerError } = axios.HttpStatusCode;
 
 const getAllOrders = async () => {
-  const response = await axios.get(config.api.orders.url);
+  // const response = await axios.get(config.api.orders.url);
 
-  if (!response.data.success) {
-    throw new Error(InternalServerError);
-  }
+  // if (!response.data.success) {
+  //   throw new Error(InternalServerError);
+  // }
 
   return orders;
 };

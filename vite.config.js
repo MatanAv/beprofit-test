@@ -5,7 +5,8 @@ import vue from '@vitejs/plugin-vue';
 export default defineConfig({
   resolve: {
     alias: {
-      '@': '/src'
+      '@': '/src',
+      '@vuetify/labs': '/node_modules/vuetify/lib/labs'
     }
   },
   plugins: [vue()],

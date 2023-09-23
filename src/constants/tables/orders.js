@@ -1,0 +1,71 @@
+const ordersTableHeader = [
+  { key: 'order_ID', title: 'Order ID' },
+  { key: 'name', title: 'Name' },
+  { key: 'total_refunded', title: 'Total Refunded' },
+  { key: 'created_at', title: 'Created At' },
+  { key: 'total_price', title: 'Total Price' },
+  { key: 'refunds', title: 'Refunds' },
+  { key: 'disputes', title: 'Disputes' },
+  { key: 'country', title: 'Country' },
+  { key: 'total_production_cost', title: 'Total Production Cost' },
+  { key: 'clients_shipping_price', title: 'Clients Shipping Price' },
+  { key: 'financial_status', title: 'Financial Status' },
+  { key: 'total_discounts', title: 'Total Discounts' },
+  { key: 'total_tax', title: 'Total Tax' },
+  { key: 'subtotal_price', title: 'Subtotal Price' },
+  { key: 'total_items', title: 'Total Items' },
+  { key: 'fulfillment_status', title: 'Fulfillment Status' },
+  { key: 'currency', title: 'Currency' },
+  { key: 'cancel_reason', title: 'Cancel Reason' },
+  { key: 'cancelled_at', title: 'Cancelled At' },
+  { key: 'total_shipping_labels_cost', title: 'Total Shipping Labels Cost' },
+  { key: 'email', title: 'Email' },
+  { key: 'first_name', title: 'First Name' },
+  { key: 'last_name', title: 'Last Name' },
+  { key: 'total_order_shipping_cost', title: 'Total Order Shipping Cost' },
+  { key: 'total_order_handling_cost', title: 'Total Order Handling Cost' },
+  { key: 'shipping_source', title: 'Shipping Source' },
+  { key: 'shipping_title', title: 'Shipping Title' },
+  { key: 'shipping_tax', title: 'Shipping Tax' },
+  // { key: 'line_items', title: 'Line Items' },
+  // { key: 'transactions', title: 'Transactions' },
+  { key: 'total_fees', title: 'Total Fees' },
+  { key: 'shipping_labels_exist', title: 'Shipping Labels Exist' },
+  { key: 'gross_profit', title: 'Gross Profit' },
+  { key: 'gross_margin', title: 'Gross Margin' }
+];
+
+const lineItemsTableHeader = [
+  { key: 'line_item_ID', title: 'Line Item ID' },
+  { key: 'order_ID', title: 'Order ID' },
+  { key: 'name', title: 'Name' },
+  { key: 'price', title: 'Price' },
+  { key: 'vendor', title: 'Vendor' },
+  { key: 'production_cost', title: 'Production Cost' },
+  { key: 'quantity', title: 'Quantity' },
+  { key: 'refundable_quantity', title: 'Refundable Quantity' },
+  { key: 'refunded_quantity', title: 'Refunded Quantity' },
+  { key: 'production_cost_reason', title: 'Production Cost Reason' },
+  { key: 'fulfillment_status', title: 'Fulfillment Status' },
+  { key: 'cogs_price', title: 'COGS Price' },
+  { key: 'sku', title: 'SKU' },
+  { key: 'variant_ID', title: 'Variant ID' },
+  { key: 'product_ID', title: 'Product ID' },
+  { key: 'original_production_cost', title: 'Original Production Cost' }
+];
+
+const transactionInfo = [
+  { key: 'transaction_ID', title: 'Transaction ID' },
+  { key: 'order_ID', title: 'Order ID' },
+  { key: 'amount', title: 'Amount' },
+  { key: 'gateway', title: 'Gateway' },
+  { key: 'fee', title: 'Fee' },
+  { key: 'shopify_fee', title: 'Shopify Fee' },
+  { key: 'fee_reason', title: 'Fee Reason' },
+  { key: 'gateway_ID', title: 'Gateway ID' },
+  { key: 'processed_at', title: 'Processed At' },
+  { key: 'status', title: 'Status' },
+  { key: 'kind', title: 'Kind' }
+];
+
+export { ordersTableHeader, lineItemsTableHeader, transactionInfo };
