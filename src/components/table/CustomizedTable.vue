@@ -1,9 +1,20 @@
 <template>
   <section>
-    <v-data-table :headers="headers" :items="items" :sort-by="sortBy" class="elevation-1">
+    <v-data-table
+      v-model:expanded="expanded"
+      :item-value="itemValue"
+      :headers="customizedHeader"
+      :items="items"
+      :show-expand="showExpand"
+      :density="density"
+      :search="search"
+      :loading="isLoading"
+      no-data-text="Table is empty."
+      class="elevation-1"
+    >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title v-if="tableTitle">{{ tableTitle }}</v-toolbar-title>
+          <v-toolbar-title>{{ title }}</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="500px">
@@ -18,20 +29,8 @@
               <v-card-text>
                 <v-container>
                   <v-row>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
+                    <v-col cols="12" sm="8" md="6" v-for="key in Object.keys(defaultForm)">
+                      <v-text-field v-model="editedItem[key]" :label="toLabel(key)"></v-text-field>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -56,24 +55,46 @@
             </v-card>
           </v-dialog>
         </v-toolbar>
+        <v-text-field
+          v-if="isSearchable"
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+          density="compact"
+        ></v-text-field>
       </template>
+
       <template v-slot:item.actions="{ item }">
         <v-icon size="small" class="me-2" @click="editItem(item.raw)"> mdi-pencil </v-icon>
         <v-icon size="small" @click="deleteItem(item.raw)"> mdi-delete </v-icon>
       </template>
-      <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize"> Reset </v-btn>
+
+      <template v-slot:expanded-row="{ columns, item }">
+        {{ console.log(item) }}
+        <!-- <basic-table :headers="columns" :items="[item.raw]" /> -->
       </template>
     </v-data-table>
   </section>
 </template>
 
 <script>
+import _ from 'lodash';
 import { VDataTable } from '@vuetify/labs/VDataTable/VDataTable';
+import BasicTable from '../CustomizedTable/BasicTable.vue';
 
 export default {
   name: 'CustomizedTable',
   props: {
+    itemValue: {
+      type: String,
+      default: ''
+    },
+    title: {
+      type: String,
+      default: ''
+    },
     headers: {
       type: Array,
       required: true
@@ -86,204 +107,105 @@ export default {
       type: Number,
       default: 10
     },
-    tableTitle: {
+    defaultForm: {
+      type: Object,
+      required: true
+    },
+    showExpand: {
+      type: Boolean,
+      default: false
+    },
+    density: {
       type: String,
-      default: ''
+      default: 'default'
     },
-    sortBy: {
-      type: Array,
-      default: () => []
+    isSearchable: {
+      type: Boolean,
+      default: false
     },
-    expandable: {
+    isLoading: {
       type: Boolean,
       default: false
     }
-    // sortable: {
-    //   type: Boolean,
-    //   default: false
-    // },
-    // filterable: {
-    //   type: Boolean,
-    //   default: false
-    // },
-    // searchable: {
-    //   type: Boolean,
-    //   default: false
-    // }
   },
   data: () => ({
     dialog: false,
     dialogDelete: false,
     editedIndex: -1,
-    editedItem: {
-      name: '',
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0
-    },
-    defaultItem: {
-      name: '',
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0
-    }
+    editedItem: {},
+    expanded: [],
+    search: ''
   }),
-
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? 'New Item' : 'Edit Item';
+    },
+    customizedHeader() {
+      if (!this.items.length) return [];
+
+      const custom = [{ title: 'Actions', key: 'actions', sortable: false }];
+
+      return [...this.headers, ...custom];
     }
   },
-
   watch: {
     dialog(val) {
       val || this.close();
     },
     dialogDelete(val) {
       val || this.closeDelete();
+    },
+    defaultForm: {
+      handler(newVal) {
+        this.editedItem = newVal;
+      },
+      immediate: true
     }
   },
-
-  created() {
-    this.initialize();
-  },
-
   methods: {
-    initialize() {
-      this.desserts = [
-        {
-          name: 'Frozen Yogurt',
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0
-        },
-        {
-          name: 'Ice cream sandwich',
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3
-        },
-        {
-          name: 'Eclair',
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0
-        },
-        {
-          name: 'Cupcake',
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3
-        },
-        {
-          name: 'Gingerbread',
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9
-        },
-        {
-          name: 'Jelly bean',
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0
-        },
-        {
-          name: 'Lollipop',
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0
-        },
-        {
-          name: 'Honeycomb',
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5
-        },
-        {
-          name: 'Donut',
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9
-        },
-        {
-          name: 'KitKat',
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7
-        },
-        {
-          name: 'KitKat2',
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7
-        },
-        {
-          name: 'KitKat3',
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7
-        }
-      ];
+    toLabel(str) {
+      return _.startCase(str);
     },
-
     editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
+      this.editedIndex = this.items.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
-
     deleteItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
+      this.editedIndex = this.items.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
-
     deleteItemConfirm() {
-      this.desserts.splice(this.editedIndex, 1);
+      this.items.splice(this.editedIndex, 1);
       this.closeDelete();
     },
-
     close() {
       this.dialog = false;
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedItem = Object.assign({}, this.defaultForm);
         this.editedIndex = -1;
       });
     },
-
     closeDelete() {
       this.dialogDelete = false;
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedItem = Object.assign({}, this.defaultForm);
         this.editedIndex = -1;
       });
     },
-
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
+        Object.assign(this.items[this.editedIndex], this.editedItem);
       } else {
-        this.desserts.push(this.editedItem);
+        this.items.push(this.editedItem);
       }
       this.close();
     }
   },
   components: {
-    VDataTable
+    VDataTable,
+    BasicTable
   }
 };
 </script>

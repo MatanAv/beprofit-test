@@ -1,35 +1,46 @@
 <template>
-  <CustomizedTable id="orders-table" v-if="orders" :headers="headers" :items="orders" />
+  <CustomizedTable
+    v-if="headers"
+    id="orders-table"
+    title="Orders"
+    itemValue="order_ID"
+    :headers="headers"
+    :items="orders"
+    :defaultForm="defaultForm"
+    :showExpand="true"
+    :isSearchable="true"
+    :isLoading="isLoading"
+  />
 </template>
 
 <script>
 import CustomizedTable from '@/components/table/CustomizedTable.vue';
 import { getAllOrders } from '@/services/api/orders.js';
-import { ordersTableHeader, lineItemsTableHeader, transactionInfo } from '@/constants/tables/orders.js';
+import { getHeadersByObject, getItemDefaultForm } from '@/utils/tables';
 
 export default {
   name: 'OrdersTable',
   data: function () {
     return {
-      orders: null,
-      itemsPerPage: 10,
+      headers: [],
+      expanded: [],
+      orders: [],
+      defaultForm: {},
+      isLoading: true,
       error: null
     };
-  },
-  computed: {
-    headers() {
-      return ordersTableHeader;
-    }
-    // lineItemsTableHeader() {
-    //   return lineItemsTableHeader;
-    // },
-    // transactionInfo() {
-    //   return transactionInfo;
-    // }
   },
   async created() {
     try {
       this.orders = await getAllOrders();
+
+      const headersData = getHeadersByObject(this.orders[0]);
+
+      this.headers = headersData.headers;
+      this.expanded = headersData.expanded;
+      this.defaultForm = getItemDefaultForm(this.orders[0]);
+
+      this.isLoading = false;
     } catch (error) {
       console.error(error);
       this.error = error;
