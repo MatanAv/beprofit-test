@@ -8,7 +8,7 @@
     :density="density"
     :search="search"
     :loading="isLoading"
-    no-data-text="Table is empty."
+    :no-data-text="noDataText"
     class="elevation-1"
   >
     <template v-slot:top>
@@ -127,9 +127,9 @@ export default {
       type: Boolean,
       default: false
     },
-    expandedFields: {
-      type: Array,
-      default: () => []
+    hasError: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
@@ -153,6 +153,9 @@ export default {
     },
     expandedFields() {
       return getExpandedFieldsByObject(this.items[0]);
+    },
+    noDataText() {
+      return this.hasError ? 'Something went wrong.' : 'Table is empty.';
     }
   },
   watch: {

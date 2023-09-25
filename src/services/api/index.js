@@ -1,6 +1,6 @@
 import axios from 'axios';
-
-const { InternalServerError } = axios.HttpStatusCode;
+import { HttpError } from '../http-error';
+import { errors } from '@/constants/errors';
 
 async function retryFetch(url, options, retries = 3) {
   for (let i = 0; i < retries; i++) {
@@ -8,7 +8,7 @@ async function retryFetch(url, options, retries = 3) {
       const response = await axios.get(url, options);
 
       if (!response.data.success) {
-        throw new Error(InternalServerError);
+        throw new HttpError(errors.InternalServerError);
       }
 
       return response;
@@ -21,7 +21,7 @@ async function retryFetch(url, options, retries = 3) {
   }
 
   // All retries failed, throw an error.
-  throw new Error(InternalServerError);
+  throw new HttpError(errors.InternalServerError);
 }
 
 export { retryFetch };

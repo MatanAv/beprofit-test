@@ -1,29 +1,33 @@
 <template>
-  <CustomizedTable
-    v-if="headers"
-    id="orders-table"
-    title="Orders"
-    itemValue="order_ID"
-    :headers="headers"
-    :items="orders"
-    :defaultForm="defaultForm"
-    :showExpand="true"
-    :isSearchable="true"
-    :isLoading="isLoading"
-  />
+  <section id="orders-page">
+    <CustomizedTable
+      id="orders-table"
+      title="Orders"
+      itemValue="order_ID"
+      :headers="headers"
+      :items="orders"
+      :defaultForm="defaultForm"
+      :showExpand="true"
+      :isSearchable="true"
+      :isLoading="isLoading"
+      :hasError="!!error"
+    />
+    <AlertError v-if="error" :error="error" />
+  </section>
 </template>
 
 <script>
 import CustomizedTable from '@/components/table/CustomizedTable.vue';
+import AlertError from '@/components/errors/AlertError.vue';
 import { getAllOrders } from '@/services/api/orders.js';
-import { getHeadersByObject, getExpandedFieldsByObject, getItemDefaultForm } from '@/utils/tables';
+import { getHeadersByObject, getItemDefaultForm } from '@/utils/tables';
+import { ordersHeaders, ordersDefaultForm } from '@/constants/orders';
 
 export default {
   name: 'OrdersTable',
   data: function () {
     return {
       headers: [],
-      expanded: [],
       orders: [],
       defaultForm: {},
       isLoading: true,
@@ -31,21 +35,35 @@ export default {
     };
   },
   async created() {
+    // In a real application, both should have been in sync with the DB and not rely on the API response
+    // this.headers = getHeadersByObject('tableName');
+    // this.defaultForm = getItemDefaultForm('tableName');
+
     try {
       this.orders = await getAllOrders();
 
-      this.headers = getHeadersByObject(this.orders[0]);
-      this.defaultForm = getItemDefaultForm(this.orders[0]);
+      // In a generic way (which is still not a good practice but better than hardcoded values)
+      if (this.orders.length) {
+        this.headers = getHeadersByObject(this.orders[0]);
+        this.defaultForm = getItemDefaultForm(this.orders[0]);
+      }
+      // Using hardcoded values
+      else {
+        this.headers = { ...ordersHeaders };
+        this.defaultForm = { ...ordersDefaultForm };
+      }
 
       this.isLoading = false;
     } catch (error) {
       console.error(error);
       this.error = error;
-      // redirect to error page or show error message
+    } finally {
+      this.isLoading = false;
     }
   },
   components: {
-    CustomizedTable
+    CustomizedTable,
+    AlertError
   }
 };
 </script>
@@ -53,8 +71,7 @@ export default {
 <style scoped>
 #orders-table {
   width: 90%;
-  margin: 0 auto;
-  padding: 20px;
-  /* border-radius: 5px; */
+  margin: 20px auto;
+  border-radius: 10px;
 }
 </style>

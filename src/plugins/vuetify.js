@@ -8,6 +8,10 @@ import { aliases, mdi } from 'vuetify/iconsets/mdi';
 export default createVuetify({
   components,
   directives,
+  theme: {
+    defaultTheme: 'dark'
+    // defaultTheme: 'light'
+  },
   icons: {
     defaultSet: 'mdi',
     aliases,

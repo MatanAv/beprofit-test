@@ -10,13 +10,19 @@ export default {
 </script>
 
 <template>
-  <header></header>
+  <header>
+    <h1>BeProfit Assignment</h1>
+  </header>
   <nav></nav>
   <main>
     <OrdersTable />
-    <!-- <router-view></router-view> -->
   </main>
   <footer></footer>
 </template>
 
-<style scoped></style>
+<style scoped>
+header {
+  text-align: center;
+  margin: 20px 0;
+}
+</style>

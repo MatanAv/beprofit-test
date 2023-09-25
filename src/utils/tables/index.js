@@ -30,16 +30,3 @@ function getItemDefaultForm(item) {
 }
 
 export { getHeadersByObject, getExpandedFieldsByObject, getItemDefaultForm };
-
-// -- Idea --
-
-// Each array column will appear in the expanded rows, as a expanded row that shows the array in a table format.
-
-// -- Test --
-
-// unit test = input output -> test case (happy path, edge case, -error case-) -> test suite
-
-// component test = test the component in isolation, only test the component itself, not the children components
-// -- mock the props
-
-// e2e test = test the whole app, test the user flow, test the user interaction, test the user experience

@@ -1,15 +1,9 @@
-import axios from 'axios';
 import config from '@/config';
 import orders from '@/assets/data/orders.json';
 import { retryFetch } from '.';
 
 const getAllOrders = async () => {
-  // await retryFetch(config.api.orders.url);
-  const response = await axios.get(config.api.orders.url);
-
-  if (!response.data.success) {
-    throw new Error(InternalServerError);
-  }
+  await retryFetch(config.api.orders.url);
 
   return orders;
 };
