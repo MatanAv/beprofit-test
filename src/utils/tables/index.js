@@ -2,46 +2,34 @@ import _ from 'lodash';
 
 function getHeadersByObject(obj) {
   const headers = [];
-  const expanded = [];
 
-  for (const key in obj) {
-    const headerData = { key, title: _.camelCase(key) };
-    const headerList = Array.isArray(obj[key]) ? expanded : headers;
-
-    headerList.push(headerData);
+  for (const [key, value] of Object.entries(obj)) {
+    if (!Array.isArray(value)) {
+      headers.push({ key, title: _.camelCase(key) });
+    }
   }
 
-  return { headers, expanded };
+  return headers;
 }
 
-// // Assuming there are no fields with objects inside the object
-// function getHeadersByObject(obj) {
-//   const headers = [];
+function getExpandedFieldsByObject(obj) {
+  return Object.keys(obj).filter((key) => Array.isArray(obj[key]));
+}
 
-//   for (const key in obj) {
-//     if (!Array.isArray(obj[key])) {
-//       headers.push({ key, title: _.camelCase(key) });
-//     }
-//   }
-
-//   return headers;
-// }
-
+// Assuming there are no fields with objects inside the object
 function getItemDefaultForm(item) {
   const form = {};
 
-  for (const key in item) {
-    if (Array.isArray(item[key])) continue;
-
-    const type = typeof item[key];
-
-    form[key] = type === 'number' ? 0 : '';
+  for (const [key, value] of Object.entries(item)) {
+    if (!Array.isArray(value)) {
+      form[key] = typeof value === 'number' ? 0 : '';
+    }
   }
 
   return form;
 }
 
-export { getHeadersByObject, getItemDefaultForm };
+export { getHeadersByObject, getExpandedFieldsByObject, getItemDefaultForm };
 
 // -- Idea --
 

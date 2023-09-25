@@ -11,7 +11,7 @@ const getAllOrders = async () => {
     throw new Error(InternalServerError);
   }
 
-  return orders.slice(0, 1);
+  return orders;
 };
 
 // in a large-scale application, I would've prefer to use virtualization instead of returning all orders at once

@@ -16,7 +16,7 @@
 <script>
 import CustomizedTable from '@/components/table/CustomizedTable.vue';
 import { getAllOrders } from '@/services/api/orders.js';
-import { getHeadersByObject, getItemDefaultForm } from '@/utils/tables';
+import { getHeadersByObject, getExpandedFieldsByObject, getItemDefaultForm } from '@/utils/tables';
 
 export default {
   name: 'OrdersTable',
@@ -34,10 +34,7 @@ export default {
     try {
       this.orders = await getAllOrders();
 
-      const headersData = getHeadersByObject(this.orders[0]);
-
-      this.headers = headersData.headers;
-      this.expanded = headersData.expanded;
+      this.headers = getHeadersByObject(this.orders[0]);
       this.defaultForm = getItemDefaultForm(this.orders[0]);
 
       this.isLoading = false;
