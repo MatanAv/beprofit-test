@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const codes = axios.HttpStatusCode;
+import { HttpStatusCode as codes } from 'axios';
 
 const errors = {
   InternalServerError: {

@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { HttpError } from '../http-error';
 import { errors } from '@/constants/errors';
+import { MAX_ATTEMPTS, RETRY_DELAY } from '@/constants/api';
 
-async function retryFetch(url, options, retries = 3) {
+async function retryFetch(url, options, retries = MAX_ATTEMPTS) {
   for (let i = 0; i < retries; i++) {
     try {
       const response = await axios.get(url, options);
@@ -17,7 +18,7 @@ async function retryFetch(url, options, retries = 3) {
     }
 
     // Wait for 1 second before retrying.
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY));
   }
 
   // All retries failed, throw an error.

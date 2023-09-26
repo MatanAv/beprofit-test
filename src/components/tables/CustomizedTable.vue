@@ -178,12 +178,12 @@ export default {
     },
     editItem(item) {
       this.editedIndex = this.items.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+      this.editedItem = _.cloneDeep(item);
       this.dialog = true;
     },
     deleteItem(item) {
       this.editedIndex = this.items.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+      this.editedItem = _.cloneDeep(item);
       this.dialogDelete = true;
     },
     deleteItemConfirm() {
@@ -193,20 +193,20 @@ export default {
     close() {
       this.dialog = false;
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultForm);
+        this.editedItem = _.cloneDeep(this.defaultForm);
         this.editedIndex = -1;
       });
     },
     closeDelete() {
       this.dialogDelete = false;
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultForm);
+        this.editedItem = _.cloneDeep(this.defaultForm);
         this.editedIndex = -1;
       });
     },
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.items[this.editedIndex], this.editedItem);
+        this.items[this.editedIndex] = _.cloneDeep(this.editedItem);
       } else {
         this.items.push(this.editedItem);
       }

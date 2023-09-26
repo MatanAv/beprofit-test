@@ -1,21 +1,22 @@
-import config from '@/config';
 import orders from '@/assets/data/orders.json';
+import { BASE_URL } from '@/constants/orders';
 import { retryFetch } from '.';
 
-const getAllOrders = async () => {
-  await retryFetch(config.api.orders.url);
+const TEST_URL_PATH = `${BASE_URL}/test.php`;
 
-  return orders;
-};
+async function getAllOrders() {
+  await retryFetch(TEST_URL_PATH);
 
-// in a large-scale application, I would've prefer to use virtualization instead of returning all orders at once
-const getOrdersByPage = async (page, limit) => {
-  await retryFetch(config.api.orders.url);
+  return [];
+}
 
-  // basically, this should be a database query with pagination, and be executed on the server side with validations
+// basically, this should be a database query with pagination, and be executed on the server side with validations. client would use this function on every page change.
+async function getOrdersByPage(page, limit) {
+  await retryFetch(TEST_URL_PATH);
+
   const paginatedOrders = orders.slice(page * limit, (page + 1) * limit);
 
   return paginatedOrders;
-};
+}
 
 export { getAllOrders, getOrdersByPage };

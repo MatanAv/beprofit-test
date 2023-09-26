@@ -21,7 +21,7 @@ import CustomizedTable from '@/components/tables/CustomizedTable.vue';
 import AlertError from '@/components/errors/AlertError.vue';
 import { getAllOrders } from '@/services/api/orders.js';
 import { getHeadersByObject, getItemDefaultForm } from '@/utils/tables';
-import { ordersHeaders, ordersDefaultForm } from '@/constants/orders';
+import { getConstantHeaders, getConstantDefaultForm } from '@/utils/builders/orders';
 
 export default {
   name: 'OrdersTable',
@@ -49,8 +49,8 @@ export default {
       }
       // Using hardcoded values
       else {
-        this.headers = { ...ordersHeaders };
-        this.defaultForm = { ...ordersDefaultForm };
+        this.headers = getConstantHeaders();
+        this.defaultForm = getConstantDefaultForm();
       }
 
       this.isLoading = false;
