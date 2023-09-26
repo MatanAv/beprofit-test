@@ -7,7 +7,7 @@ const TEST_URL_PATH = `${BASE_URL}/test.php`;
 async function getAllOrders() {
   await retryFetch(TEST_URL_PATH);
 
-  return [];
+  return orders;
 }
 
 // basically, this should be a database query with pagination, and be executed on the server side with validations. client would use this function on every page change.
