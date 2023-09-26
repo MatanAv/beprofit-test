@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import CustomizedTable from '@/components/table/CustomizedTable.vue';
+import CustomizedTable from '@/components/tables/CustomizedTable.vue';
 import AlertError from '@/components/errors/AlertError.vue';
 import { getAllOrders } from '@/services/api/orders.js';
 import { getHeadersByObject, getItemDefaultForm } from '@/utils/tables';
