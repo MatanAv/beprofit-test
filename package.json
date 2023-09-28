@@ -11,7 +11,7 @@
     "start": "vite preview"
   },
   "dependencies": {
-    "@mdi/font": ".2.96",
+    "@mdi/font": "7.2.96",
     "axios": "1.5.0",
     "loadsh": "^0.0.4",
     "vue": "3.3.4",
